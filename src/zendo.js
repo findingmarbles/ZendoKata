@@ -1,3 +1,12 @@
+// Array Remove - By John Resig (MIT Licensed)
+Array.prototype.remove = function(from, to) {
+    var rest = this.slice((to || from) + 1 || this.length);
+    this.length = from < 0 ? this.length + from : from;
+    return this.push.apply(this, rest);
+};
+
+
+
 function Zendo(trainingSet) {
 
     return {
@@ -11,22 +20,59 @@ function Zendo(trainingSet) {
     }
 }
 
-function Config(myConfig) {
+function Config(trainingConfig) {
     return {
-        // TODO: Make independent of order! - Copy array and remove matched obj
+
+        calcSimilarity: function(config) {
+            var simScore = 0;
+            var clonedConfig = JSON.parse( JSON.stringify(config) );
+            var clonedTrainingConfig = JSON.parse( JSON.stringify(trainingConfig) );
+
+            // Check for identical objects
+            for (var i=0; i<clonedConfig.length; i++) {
+                for (var k=0; k<clonedTrainingConfig.length; k++) {
+                    if (clonedConfig[i].color == clonedTrainingConfig[k].color && clonedConfig[i].size == clonedTrainingConfig[k].size) {
+                        simScore += 2;
+                        clonedConfig.remove(i);
+                        i--;
+                        clonedTrainingConfig.remove(k);
+                        break;
+                    }
+                }
+            }
+
+            // Check for 1 matching property
+            for (var i=0; i<clonedConfig.length; i++) {
+                for (var k=0; k<clonedTrainingConfig.length; k++) {
+                    if (clonedConfig[i].color == clonedTrainingConfig[k].color || clonedConfig[i].size == clonedTrainingConfig[k].size) {
+                        simScore += 1;
+                        clonedConfig.remove(i);
+                        i--;
+                        clonedTrainingConfig.remove(k);
+                        break;
+                    }
+                }
+            }
+
+            // Subtract points for leftover items in training config
+            simScore -= Math.abs(clonedConfig.length - clonedTrainingConfig.length);
+
+            return simScore;
+        },
+        // TODO: Can probably be deleted later on
+        // If not deleted: Make independent of order! - Copy array and remove matched obj
         isSameAs: function(config) {
-            if (myConfig.length != config.length) {
+            if (trainingConfig.length != config.length) {
                 return false;
             }
-            for (var i=0; i<myConfig.length; i++) {
-                if (myConfig[i].color != config[i].color || myConfig[i].size != config[i].size) {
+            for (var i=0; i<trainingConfig.length; i++) {
+                if (trainingConfig[i].color != config[i].color || trainingConfig[i].size != config[i].size) {
                     return false;
                 }
             }
             return true;
         }
 
-        // TODO: calcSimilarity()
         // TODO: if several max similar -> majority vote
         // TODO: Fallback Zufall?
     }
