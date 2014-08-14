@@ -48,10 +48,12 @@ function Config(trainingConfig) {
             var clonedTrainingConfig = JSON.parse( JSON.stringify(trainingConfig) );
 
             // Check for identical objects
+            var score = 2;
+
             for (var i=0; i<clonedConfig.length; i++) {
                 for (var k=0; k<clonedTrainingConfig.length; k++) {
-                    if (clonedConfig[i].color == clonedTrainingConfig[k].color && clonedConfig[i].size == clonedTrainingConfig[k].size) {
-                        simScore += 2;
+                    if (this.isSetIdentical(clonedConfig[i], clonedTrainingConfig[k])) {
+                        simScore += score;
                         clonedConfig.remove(i);
                         i--;
                         clonedTrainingConfig.remove(k);
@@ -61,10 +63,11 @@ function Config(trainingConfig) {
             }
 
             // Check for 1 matching property
+            score = 1;
             for (var i=0; i<clonedConfig.length; i++) {
                 for (var k=0; k<clonedTrainingConfig.length; k++) {
-                    if (clonedConfig[i].color == clonedTrainingConfig[k].color || clonedConfig[i].size == clonedTrainingConfig[k].size) {
-                        simScore += 1;
+                    if (this.hasOneSharedProperty(clonedConfig[i], clonedTrainingConfig[k])) {
+                        simScore += score;
                         clonedConfig.remove(i);
                         i--;
                         clonedTrainingConfig.remove(k);
@@ -77,6 +80,12 @@ function Config(trainingConfig) {
             simScore -= Math.abs(clonedConfig.length - clonedTrainingConfig.length);
 
             return simScore;
+        },
+        isSetIdentical: function(config, trainingConfig) {
+            return config.color == trainingConfig.color && config.size == trainingConfig.size;
+        },
+        hasOneSharedProperty: function(config, trainingConfig) {
+            return config.color == trainingConfig.color || config.size == trainingConfig.size;
         }
     }
 }

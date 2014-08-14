@@ -1,18 +1,29 @@
+/*
+ * 20140814
+ * "item" = single part of a config, here defined by a color and size
+ * "config" = a configuration of items
+ * "training set" = set of configurations known to be valid or invalid
+ */
+
 describe("Zendo", function() {
+    var item1 = { color: 'red', size: 'S' };
+    var item2 = { color: 'blue', size: 'S' };
+    var item3 = { color: 'green', size: 'M' };
+
     var conf1 = [
-        { color: 'red', size: 'S' }
+        item1
     ];
     var conf2 = [
-        { color: 'blue', size: 'M' },
-        { color: 'red', size: 'S' }
+        item1,
+        { color: 'blue', size: 'M' }
     ];
     var conf3 = [
         { color: 'blue', size: 'M' },
-        { color: 'red', size: 'S' },
-        { color: 'green', size: 'M' }
+        item1,
+        item3
     ];
     var conf4 = [
-        { color: 'blue', size: 'S' }
+        item2
     ];
 
     it('predicts classification of most similar config', function() {
@@ -23,6 +34,26 @@ describe("Zendo", function() {
         ];
         var myZendo = new Zendo(trainingSet);
         expect(myZendo.predict(conf2)).toEqual(true);
+    });
+
+    it('isSetIdentical returns true for identical items', function() {
+        var myConfig = new Config([]);
+        expect(myConfig.isSetIdentical(item1, item1)).toEqual(true);
+    });
+
+    it('isSetIdentical returns false for non-identical items', function() {
+        var myConfig = new Config([]);
+        expect(myConfig.isSetIdentical(item1, item2)).toEqual(false);
+    });
+
+    it('hasOneSharedProperty returns true for items that share 1 property', function() {
+        var myConfig = new Config([]);
+        expect(myConfig.hasOneSharedProperty(item1, item2)).toEqual(true);
+    });
+
+    it('hasOneSharedProperty returns false for items that have no property in common', function() {
+        var myConfig = new Config([]);
+        expect(myConfig.hasOneSharedProperty(item1, item3)).toEqual(false);
     });
 
     it('getMajorityPrediction returns true if maxScoringSet = 1 valid config', function() {
