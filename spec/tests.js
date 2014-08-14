@@ -1,24 +1,24 @@
 /*
  * 20140814
- * "item" = single part of a config, here defined by a color and size
+ * "item" = individual part in a config, here defined by color, width & height
  * "config" = a configuration of items
  * "training set" = set of configurations known to be valid or invalid
  */
 
 describe("Zendo", function() {
-    var item1 = { color: 'red', size: 'S' };
-    var item2 = { color: 'blue', size: 'S' };
-    var item3 = { color: 'green', size: 'M' };
+    var item1 = { color: 'red', width: 'S', height: '10' };
+    var item2 = { color: 'blue', width: 'S', height: '20' };
+    var item3 = { color: 'green', width: 'M', height: '30' };
 
     var conf1 = [
         item1
     ];
     var conf2 = [
         item1,
-        { color: 'blue', size: 'M' }
+        { color: 'blue', width: 'M', height: '20' }
     ];
     var conf3 = [
-        { color: 'blue', size: 'M' },
+        { color: 'blue', width: 'M', height: '10' },
         item1,
         item3
     ];
@@ -78,10 +78,10 @@ describe("Zendo", function() {
 
     it('Config.calcSimiliarity returns correct scores', function() {
         var testConfig = new Config(conf2);
-        expect(testConfig.calcSimilarity(conf1)).toEqual(1);
-        expect(testConfig.calcSimilarity(conf2)).toEqual(4);
-        expect(testConfig.calcSimilarity(conf3)).toEqual(3);
-        expect(testConfig.calcSimilarity(conf4)).toEqual(0)
+        expect(testConfig.calcSimilarity(conf1)).toEqual(1.5);
+        expect(testConfig.calcSimilarity(conf2)).toEqual(6);
+        expect(testConfig.calcSimilarity(conf3)).toEqual(3.5);
+        expect(testConfig.calcSimilarity(conf4)).toEqual(0.5)
     });
 
     it('returns known classification for config given in training set', function() {
