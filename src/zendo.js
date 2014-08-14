@@ -47,60 +47,26 @@ function Config(trainingConfig) {
             var clonedConfig = JSON.parse( JSON.stringify(config) );
             var clonedTrainingConfig = JSON.parse( JSON.stringify(trainingConfig) );
 
-            alert(Object.keys(clonedConfig).length);
- //           for (var h=Object.keys(clonedConfig).length; h>0; h--) {
-//                for (var i=0; i<clonedConfig.length; i++) {
-//                    for (var k=0; k<clonedTrainingConfig.length; k++) {
-//                        if (this.hasOneSharedProperty(clonedConfig[i], clonedTrainingConfig[k])) {
-//                            simScore += score;
-//                            clonedConfig.remove(i);
-//                            i--;
-//                            clonedTrainingConfig.remove(k);
-//                            break;
-//                        }
-//                    }
-//                }
- //           }
-
-            // Check for identical objects
-            var score = 2;
-
-            for (var i=0; i<clonedConfig.length; i++) {
-                for (var k=0; k<clonedTrainingConfig.length; k++) {
-                    if (this.isSetIdentical(clonedConfig[i], clonedTrainingConfig[k])) {
-                        simScore += score;
-                        clonedConfig.remove(i);
-                        i--;
-                        clonedTrainingConfig.remove(k);
-                        break;
-                    }
-                }
-            }
-
-            // Check for 1 matching property
-            score = 1;
-            for (var i=0; i<clonedConfig.length; i++) {
-                for (var k=0; k<clonedTrainingConfig.length; k++) {
-                    if (this.hasOneSharedProperty(clonedConfig[i], clonedTrainingConfig[k])) {
-                        simScore += score;
-                        clonedConfig.remove(i);
-                        i--;
-                        clonedTrainingConfig.remove(k);
-                        break;
+            var numberOfProperties = Object.keys(config[0]).length;
+            for (var h=numberOfProperties; h>0; h--) {
+                for (var i=0; i<clonedConfig.length; i++) {
+                    for (var k=0; k<clonedTrainingConfig.length; k++) {
+                        if (this.hasNMatchingProperties(h, clonedConfig[i], clonedTrainingConfig[k])) {
+                            simScore += h;
+                            clonedConfig.remove(i);
+                            i--;
+                            clonedTrainingConfig.remove(k);
+                            break;
+                        }
                     }
                 }
             }
 
             // Subtract points for leftover items in training config
+            // TODO - an beliebig viele Dims anpassen
             simScore -= Math.abs(clonedConfig.length - clonedTrainingConfig.length);
 
             return simScore;
-        },
-        isSetIdentical: function(config, trainingConfig) {
-            return config.color == trainingConfig.color && config.size == trainingConfig.size;
-        },
-        hasOneSharedProperty: function(config, trainingConfig) {
-            return config.color == trainingConfig.color || config.size == trainingConfig.size;
         },
         hasNMatchingProperties: function(n, config, trainingConfig) {
             var hasNMatches = true;

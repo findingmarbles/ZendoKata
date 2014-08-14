@@ -56,26 +56,6 @@ describe("Zendo", function() {
         expect(myConfig.hasNMatchingProperties(1, item1, item3)).toEqual(false);
     });
 
-    it('isSetIdentical returns true for identical items', function() {
-        var myConfig = new Config([]);
-        expect(myConfig.isSetIdentical(item1, item1)).toEqual(true);
-    });
-
-    it('isSetIdentical returns false for non-identical items', function() {
-        var myConfig = new Config([]);
-        expect(myConfig.isSetIdentical(item1, item2)).toEqual(false);
-    });
-
-    it('hasOneSharedProperty returns true for items that share 1 property', function() {
-        var myConfig = new Config([]);
-        expect(myConfig.hasOneSharedProperty(item1, item2)).toEqual(true);
-    });
-
-    it('hasOneSharedProperty returns false for items that have no property in common', function() {
-        var myConfig = new Config([]);
-        expect(myConfig.hasOneSharedProperty(item1, item3)).toEqual(false);
-    });
-
     it('getMajorityPrediction returns true if maxScoringSet = 1 valid config', function() {
         var trainingSet = [
             [ Config(conf1), false ],
