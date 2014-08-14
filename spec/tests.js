@@ -36,6 +36,26 @@ describe("Zendo", function() {
         expect(myZendo.predict(conf2)).toEqual(true);
     });
 
+    it('hasNMatchingProperties returns true for n=properties.length for identical items', function() {
+        var myConfig = new Config([]);
+        expect(myConfig.hasNMatchingProperties(2, item1, item1)).toEqual(true);
+    });
+
+    it('hasNMatchingProperties returns false for n=properties.length for non-identical items', function() {
+        var myConfig = new Config([]);
+        expect(myConfig.hasNMatchingProperties(2, item1, item2)).toEqual(false);
+    });
+
+    it('hasNMatchingProperties returns true for n=1 for items that share a property', function() {
+        var myConfig = new Config([]);
+        expect(myConfig.hasNMatchingProperties(1, item1, item2)).toEqual(true);
+    });
+
+    it('hasNMatchingProperties returns false for n=1 for items that have no property in common', function() {
+        var myConfig = new Config([]);
+        expect(myConfig.hasNMatchingProperties(1, item1, item3)).toEqual(false);
+    });
+
     it('isSetIdentical returns true for identical items', function() {
         var myConfig = new Config([]);
         expect(myConfig.isSetIdentical(item1, item1)).toEqual(true);
