@@ -3,25 +3,25 @@ function Zendo(trainingSet) {
     return {
         predict: function(config) {
             var maxScore = 0;
-            var maxScoringSet = [];
+            var maxScoringIndexes = [];
             for (var i=0; i<trainingSet.length; i++) {
                 var simScore = trainingSet[i][0].calcSimilarity(config);
                 if (simScore > maxScore) {
                     maxScore = simScore;
-                    maxScoringSet = [i];
+                    maxScoringIndexes = [i];
                 } else if (simScore == maxScore) {
-                    maxScoringSet.push(i);
+                    maxScoringIndexes.push(i);
                 }
             }
-            return this.getMajorityPrediction(maxScoringSet);
+            return this.getMajorityPrediction(maxScoringIndexes);
         },
-        getMajorityPrediction: function(maxScoringSet) {
-            var prediction = getRandomBoolean();
+        getMajorityPrediction: function(maxScoringIndexes) {
+            var prediction = this.getRandomBoolean();
             var trueCounter = 0;
             var falseCounter = 0;
 
-            for (var i = 0; i<maxScoringSet.length; i++) {
-                if (trainingSet[maxScoringSet[i]][1]) {
+            for (var i = 0; i<maxScoringIndexes.length; i++) {
+                if (trainingSet[maxScoringIndexes[i]][1]) {
                     trueCounter++;
                 } else {
                     falseCounter++;
@@ -33,13 +33,15 @@ function Zendo(trainingSet) {
                 prediction = false;
             }
             return prediction;
+        },
+        getRandomBoolean: function() {
+            return Math.random() > 0.5;
         }
     }
 }
 
 function Config(trainingConfig) {
     return {
-
         calcSimilarity: function(config) {
             var simScore = 0;
             var clonedConfig = JSON.parse( JSON.stringify(config) );
@@ -81,10 +83,6 @@ function Config(trainingConfig) {
 
 
 /******** Helpers ***********/
-
-function getRandomBoolean() {
-    return Math.random() > 0.5;
-}
 
 // Array Remove - By John Resig (MIT Licensed)
 Array.prototype.remove = function(from, to) {
