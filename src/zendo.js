@@ -1,21 +1,38 @@
-// Array Remove - By John Resig (MIT Licensed)
-Array.prototype.remove = function(from, to) {
-    var rest = this.slice((to || from) + 1 || this.length);
-    this.length = from < 0 ? this.length + from : from;
-    return this.push.apply(this, rest);
-};
-
-
-
 function Zendo(trainingSet) {
 
     return {
         predict: function(config) {
+            var maxScore = 0;
+            var maxScoringSet = [];
             for (var i=0; i<trainingSet.length; i++) {
-                if (trainingSet[i][0].isSameAs(config)) {
-                    return trainingSet[i][1];
+                var simScore = trainingSet[i][0].calcSimilarity(config);
+                if (simScore > maxScore) {
+                    maxScore = simScore;
+                    maxScoringSet = [i];
+                } else if (simScore == maxScore) {
+                    maxScoringSet.push(i);
                 }
             }
+            return this.getMajorityPrediction(maxScoringSet);
+        },
+        getMajorityPrediction: function(maxScoringSet) {
+            var prediction = getRandomBoolean();
+            var trueCounter = 0;
+            var falseCounter = 0;
+
+            for (var i = 0; i<maxScoringSet.length; i++) {
+                if (trainingSet[maxScoringSet[i]][1]) {
+                    trueCounter++;
+                } else {
+                    falseCounter++;
+                }
+            }
+            if (trueCounter > falseCounter) {
+                prediction = true;
+            } else if (falseCounter > trueCounter) {
+                prediction = false;
+            }
+            return prediction;
         }
     }
 }
@@ -72,8 +89,19 @@ function Config(trainingConfig) {
             }
             return true;
         }
-
-        // TODO: if several max similar -> majority vote
-        // TODO: Fallback Zufall?
     }
 }
+
+
+/******** Helpers ***********/
+
+function getRandomBoolean() {
+    return Math.random() > 0.5;
+}
+
+// Array Remove - By John Resig (MIT Licensed)
+Array.prototype.remove = function(from, to) {
+    var rest = this.slice((to || from) + 1 || this.length);
+    this.length = from < 0 ? this.length + from : from;
+    return this.push.apply(this, rest);
+};

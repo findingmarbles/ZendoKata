@@ -15,6 +15,36 @@ describe("Zendo", function() {
         { color: 'blue', size: 'S' }
     ];
 
+    it('predicts classification of most similar config', function() {
+        var trainingSet = [
+            [ Config(conf1), false ],
+            [ Config(conf3), true ],
+            [ Config(conf4), false ]
+        ];
+        var myZendo = new Zendo(trainingSet);
+        expect(myZendo.predict(conf2)).toEqual(true);
+    });
+
+    it('getMajorityPrediction returns true if maxScoringSet = 1 valid config', function() {
+        var trainingSet = [
+            [ Config(conf1), false ],
+            [ Config(conf3), true ],
+            [ Config(conf4), false ]
+        ];
+        var myZendo = new Zendo(trainingSet);
+        expect(myZendo.getMajorityPrediction([1])).toEqual(true);
+    });
+
+    it('getMajorityPrediction returns false if maxScoringSet = 1 valid config, 2 invalid', function() {
+        var trainingSet = [
+            [ Config(conf1), false ],
+            [ Config(conf3), true ],
+            [ Config(conf4), false ]
+        ];
+        var myZendo = new Zendo(trainingSet);
+        expect(myZendo.getMajorityPrediction([0,1,2])).toEqual(false);
+    });
+
     it('Config.calcSimiliarity returns correct scores', function() {
         var testConfig = new Config(conf2);
         expect(testConfig.calcSimilarity(conf1)).toEqual(1);
