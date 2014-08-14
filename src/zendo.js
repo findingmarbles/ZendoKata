@@ -62,9 +62,8 @@ function Config(trainingConfig) {
                 }
             }
 
-            // Subtract points for leftover items in training config
-            // TODO - an beliebig viele Dims anpassen
-            simScore -= Math.abs(clonedConfig.length - clonedTrainingConfig.length);
+            var unmatchedItems = Math.abs(clonedConfig.length - clonedTrainingConfig.length);
+            simScore -= unmatchedItems * (numberOfProperties / 2);
 
             return simScore;
         },
