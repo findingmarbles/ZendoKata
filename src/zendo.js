@@ -75,19 +75,6 @@ function Config(trainingConfig) {
             simScore -= Math.abs(clonedConfig.length - clonedTrainingConfig.length);
 
             return simScore;
-        },
-        // TODO: Can probably be deleted later on
-        // If not deleted: Make independent of order! - Copy array and remove matched obj
-        isSameAs: function(config) {
-            if (trainingConfig.length != config.length) {
-                return false;
-            }
-            for (var i=0; i<trainingConfig.length; i++) {
-                if (trainingConfig[i].color != config[i].color || trainingConfig[i].size != config[i].size) {
-                    return false;
-                }
-            }
-            return true;
         }
     }
 }

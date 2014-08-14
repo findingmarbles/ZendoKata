@@ -53,12 +53,6 @@ describe("Zendo", function() {
         expect(testConfig.calcSimilarity(conf4)).toEqual(0)
     });
 
-    it('Config.isSameAs detects if configs are identical', function() {
-        var validConfigInst = new Config(conf2);
-        expect(validConfigInst.isSameAs(conf1)).toEqual(false);
-        expect(validConfigInst.isSameAs(conf2)).toEqual(true);
-    });
-
     it('returns known classification for config given in training set', function() {
         var validConfigInst = new Config(conf2);
         var invalidConfigInst = new Config(conf1);
